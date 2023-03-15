@@ -42,8 +42,11 @@ class MicrosoftClient:
         response = requests.post(fetch_token_url, headers=headers)
         return str(response.text)
 
-    def synth(self, ssml: str, format: FileFormat) -> bytes:
-        self._session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
+    def synth(self, ssml: str, format: FileFormat, custom_format: str = None ) -> bytes:
+        if custom_format:
+            self._session.headers["X-Microsoft-OutputFormat"] = custom_format
+        else:
+            self._session.headers["X-Microsoft-OutputFormat"] = FORMATS[format]
 
         if "Authorization" not in self._session.headers:
             access_token = self._fetch_access_token()
